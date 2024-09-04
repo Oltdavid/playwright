@@ -1,11 +1,13 @@
 package org.example;
 
 import com.microsoft.playwright.*;
-import io.qameta.allure.Allure;
+
 import io.qameta.allure.Attachment;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,13 +19,35 @@ public class PlaywrightTest {
     private Browser browser;
     private Page page;
 
+    @Parameters({"browserName"})
     @BeforeClass
-    public void setUp() {
-        System.out.println("Setting up Playwright.");
+    public void setUp(String browserName) {
+        System.out.println("Setting up Playwright for browser: " + browserName);
         playwright = Playwright.create();
-        browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
+        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(false);
+
+        switch (browserName.toLowerCase()) {
+            case "chromium":
+                browser = playwright.chromium().launch(options);
+                break;
+            case "firefox":
+                browser = playwright.firefox().launch(options);
+                break;
+            case "webkit":
+                browser = playwright.webkit().launch(options);
+                break;
+            case "edge":
+                // Microsoft Edge Chromiumként van implementálva Playwright-ban
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("msedge").setHeadless(false));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported browser: " + browserName);
+        }
+
         page = browser.newPage();
     }
+
 
     @Test
     public void testElementPresence() {
@@ -47,78 +71,6 @@ public class PlaywrightTest {
             handleTestFailure("failed_element_presence.png", e);
         }
     }
-
-
-
-    @Test
-    public void testNavigationAndScreenshot() {
-        System.out.println("Starting testNavigationAndScreenshot.");
-        try {
-            // Navigáció az oldalra
-            page.navigate("https://www.softwaretestinghelp.com/");
-
-            // Explicit várakozás egy adott elem megjelenésére, pl. h1 elem
-            page.waitForSelector("h1");
-
-            // Assert a lap címére
-            String pageTitle = page.title();
-            System.out.println("This is the title: " + pageTitle);
-            Assert.assertTrue(pageTitle.contains("Software Testing Help - FREE IT Courses and Business Software Reviews"), "Page title does not contain expected text.");
-
-            // Képernyőkép készítése az oldal betöltése után
-            page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("example.png")));
-            System.out.println("Test passed: Navigation and screenshot completed.");
-
-        } catch (Exception e) {
-            handleTestFailure("failed_example1.png", e);
-        }
-    }
-
-    @Test
-    public void testNavigationAndScreenshot1() {
-        System.out.println("Starting testNavigationAndScreenshot1.");
-        try {
-            // Navigáció az oldalra
-            page.navigate("https://www.softwaretestinghelp.com/");
-
-            // Explicit várakozás egy adott elem megjelenésére
-            page.waitForSelector("h1");
-
-            // Assert a lap címére
-            String pageTitle = page.title();
-            Assert.assertTrue(pageTitle.contains("Software Testing Help - FREE IT Courses and Business Software ReviewsSoftware Testing Help - FREE IT Courses and Business Software Reviews"), "Page title does not contain expected text.");
-
-            // Képernyőkép készítése az oldal betöltése után
-            page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("example2.png")));
-            System.out.println("Test passed: Navigation and screenshot completed.");
-
-        } catch (Exception e) {
-            handleTestFailure("failed_example2.png", e);
-        }
-    }
-
-    @Test
-    public void testFailedScenario() {
-        System.out.println("Starting testFailedScenario.");
-        try {
-            // Navigáció egy nem létező oldalra
-            page.navigate("https://example.com/non-existent-page");
-
-            // Explicit várakozás egy adott elem megjelenésére, pl. h1 elem
-            page.waitForSelector("h1");
-
-            // Képernyőkép készítése az oldal betöltése után
-            page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("nonexistent.png")));
-            System.out.println("Test passed: Navigation and screenshot completed.");
-
-            // Ez az assert hiba miatt fog elbukni
-            Assert.assertTrue(page.title().contains("Non-Existent Title"), "Page title unexpectedly matches.");
-
-        } catch (Exception e) {
-            handleTestFailure("failed_nonexistent.png", e);
-        }
-    }
-
 
     @AfterClass
     public void tearDown() {
