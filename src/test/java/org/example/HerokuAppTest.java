@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 
 import java.nio.file.Paths;
 
+import io.qameta.allure.Attachment;
+
 public class HerokuAppTest {
     Playwright playwright;
     Browser browser;
@@ -20,6 +22,14 @@ public class HerokuAppTest {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
         page = browser.newPage();
+    }
+
+    public class ScreenshotUtils {
+
+        @Attachment(value = "Screenshot on Failure", type = "image/png")
+        public static byte[] takeScreenshot(Page page) {
+            return page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
+        }
     }
 
     @Test
