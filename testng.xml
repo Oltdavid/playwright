@@ -1,16 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Playwright Suite" parallel="tests" thread-count="8">
+<suite name="Playwright Suite" parallel="tests" thread-count="4">
 
-
-
+<!--    &lt;!&ndash; Heroku Tests &ndash;&gt;
     <test name="Heroku Tests - Chrome">
         <parameter name="browserName" value="chrome"/>
         <classes>
             <class name="org.example.HerokuAppLinkTests"/>
         </classes>
     </test>
-
-
 
     <test name="Heroku Tests - Firefox">
         <parameter name="browserName" value="firefox"/>
@@ -24,29 +21,74 @@
         <classes>
             <class name="org.example.HerokuAppLinkTests"/>
         </classes>
-    </test>
+    </test>-->
 
-
-    <test name="Wizzair Login - Chrome">
+    <!-- WizzAir Austrian Page Tests -->
+    <test name="WizzAir Austrian Page - Chrome">
         <parameter name="browserName" value="chrome"/>
         <classes>
-            <class name="org.example.WizzAirLoginTest"/>
+            <class name="page.example.WizzAirAustrianPageTest"/>
         </classes>
     </test>
 
-    <test name="Wizzair Login - Firefox">
+    <test name="WizzAir Austrian Page - Firefox">
         <parameter name="browserName" value="firefox"/>
         <classes>
-            <class name="org.example.WizzAirLoginTest"/>
+            <class name="page.example.WizzAirAustrianPageTest"/>
         </classes>
     </test>
 
-    <test name="Wizzair Login - Edge">
+    <test name="WizzAir Austrian Page - Edge">
         <parameter name="browserName" value="edge"/>
         <classes>
-            <class name="org.example.WizzAirLoginTest"/>
+            <class name="page.example.WizzAirAustrianPageTest"/>
         </classes>
     </test>
+
+
+    <!-- WizzAir Login Page Tests -->
+    <test name="WizzAir Login Page - Chrome">
+        <parameter name="browserName" value="chrome"/>
+        <classes>
+            <class name="page.example.WizzAirLoginTest"/>
+        </classes>
+    </test>
+
+    <test name="WizzAir Login Page - Firefox">
+        <parameter name="browserName" value="firefox"/>
+        <classes>
+            <class name="page.example.WizzAirLoginTest"/>
+        </classes>
+    </test>
+
+    <test name="WizzAir Login Page - Edge">
+        <parameter name="browserName" value="edge"/>
+        <classes>
+            <class name="page.example.WizzAirLoginTest"/>
+        </classes>
+    </test>
+
+    <test name="WizzAirAmeliaTest - Chrome">
+        <parameter name="browserName" value="chrome"/>
+        <classes>
+            <class name="page.example.WizzAirAmeliaTest"/>
+        </classes>
+    </test>
+
+    <test name="WizzAirAmeliaTest - Firefox">
+        <parameter name="browserName" value="firefox"/>
+        <classes>
+            <class name="page.example.WizzAirAmeliaTest"/>
+        </classes>
+    </test>
+    <test name="WizzAirAmeliaTest - Edge">
+        <parameter name="browserName" value="edge"/>
+        <classes>
+            <class name="page.example.WizzAirAmeliaTest"/>
+        </classes>
+    </test>
+
+
 
 
 </suite>
